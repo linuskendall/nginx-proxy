@@ -3,6 +3,9 @@
 env:
  RUNLEVEL: 1
 
+fedora_pkg:
+  - nginx
+
 redhat_pkg:
   - nginx
 
