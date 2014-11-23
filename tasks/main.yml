@@ -54,6 +54,13 @@
    - config
   file: path=/etc/nginx/sites-enabled/default state=link src=/etc/nginx/sites-available/default 
 
+- name: Create the configuration for upstreams
+  template: src=upstream.j2 dest=/etc/nginx/conf.d/{{ item['upstream']['file_name'] }}.conf
+  tags: 
+   - config
+  with_items: nginx_upstreams
+  when: nginx_upstreams|lower != 'none'
+
 - name: Create the configurations for sites
   template: src=site.j2 dest=/etc/nginx/sites-available/{{ item['server']['file_name'] }}
   tags: 

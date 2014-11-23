@@ -1,0 +1,5 @@
+upstream {{item.upstream.name}} {
+  {% for host in groups[item.upstream.server_group] %}
+    server {{hostvars[host]["ansible_default_ipv4"]["address"]}}:{{item.upstream.port}};    
+  {% endfor %}
+}
