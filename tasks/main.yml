@@ -10,7 +10,7 @@
 
 - name: Install  epel release
   yum: pkg=epel-release state=installed
-  when: ansible_os_family == "RedHat" and (ansible_distribution == "Fedora" or ansible_distribution == "CentOS")
+  when: ansible_os_family == "RedHat" and ansible_distribution != "Fedora"
 
 - name: Install the nginx packages 
   yum: name={{ item }} state=present
