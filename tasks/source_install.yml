@@ -37,7 +37,7 @@
   user: name="{{ nginx_user }}" state=present
 
 - name: Create other directories
-  file: path="/var/log/nginx" owner="{{ nginx_user }}" state=directory 
+  file: dest="/var/log/nginx" src="/usr/local/nginx/logs" owner="{{ nginx_user }}" state=link
 
 - name: Disable apache
   service: name=apache2 state=stopped enabled=no
