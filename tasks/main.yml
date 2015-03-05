@@ -1,38 +1,30 @@
 ---
+# tasks file for php5
+#
+- name: Include OS specific variables
+  include_vars: "{{ item }}"
+  with_first_found: 
+    - "{{ansible_distribution | lower }}-{{ansible_distribution_version}}.yml"
+    - "{{ansible_distribution | lower }}.yml"
+    - "{{ansible_os_family | lower}}.yml"
+    - "default.yml"
 
 - name: Install the selinux python module
   yum: name=libselinux-python state=present
   when: ansible_os_family == "RedHat"
 
-- name: Copy the epel packages 
-  copy: src=epel.repo dest=/etc/yum.repos.d/epel_ansible.repo
-  when: ansible_os_family == "RedHat" and ansible_distribution != "Fedora" and ansible_distribution != "CentOS"
+- include: package_install.yml
+  when: '{{ nginx_install_method == "package" }}'
 
-- name: Install  epel release
-  yum: pkg=epel-release state=installed
-  when: ansible_os_family == "RedHat" and ansible_distribution != "Fedora"
-
-- name: Install the nginx packages 
-  yum: name={{ item }} state=present
-  with_items: redhat_pkg
-  when: ansible_os_family == "RedHat" and ansible_distribution != "Fedora"
-
-- name: Install the nginx packages 
-  yum: name={{ item }} state=present
-  with_items: fedora_pkg
-  when: ansible_distribution == "Fedora"
-
-- name: Install the nginx packages 
-  apt: name={{ item }} state=present update_cache=yes
-  with_items: ubuntu_pkg
-  environment: env
-  when: ansible_os_family == "Debian"
+- include: source_install.yml
+  when: '{{ nginx_install_method == "source" }}'
 
 - name: Create the directories for site specific configurations
   file: path=/etc/nginx/{{ item }} state=directory owner=root group=root mode=0755
   with_items:
     - "sites-available"
     - "sites-enabled"
+    - "conf.d"
   tags: 
    - config
 

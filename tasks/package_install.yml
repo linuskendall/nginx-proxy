@@ -1,0 +1,21 @@
+- name: Install  epel release
+  yum: pkg=epel-release state=installed
+  when: ansible_os_family == "RedHat" and ansible_distribution != "Fedora"
+
+- name: Install the nginx packages 
+  yum: name={{ item }} state=present
+  with_items: redhat_pkg
+  when: ansible_os_family == "RedHat" and ansible_distribution != "Fedora"
+
+- name: Install the nginx packages 
+  yum: name={{ item }} state=present
+  with_items: fedora_pkg
+  when: ansible_distribution == "Fedora"
+
+- name: Install the nginx packages 
+  apt: name={{ item }} state=present update_cache=yes
+  with_items: ubuntu_pkg
+  environment: env
+  when: ansible_os_family == "Debian"
+
+

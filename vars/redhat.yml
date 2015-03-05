@@ -1,0 +1,16 @@
+source_dependencies:
+  - gcc
+  - git
+  - make
+  - automake
+  - autoconf
+  - libtool
+  - pcre
+  - pcre-devel
+  - libxml2
+  - libxml2-devel
+  - curl
+  - curl-devel
+  - httpd-devel
+
+nginx_user: nginx

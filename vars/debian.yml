@@ -1,0 +1,13 @@
+source_dependencies:
+ - build-essential
+ - git
+ - libxml2
+ - libxml2-dev
+ - libxml2-utils
+ - libaprutil1
+ - libaprutil1-dev
+ - curl
+ - libcurl4-openssl-dev
+ - apache2-dev
+
+nginx_user: www-data

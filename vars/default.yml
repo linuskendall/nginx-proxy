@@ -1,0 +1,8 @@
+source_dependencies:
+    - gcc
+    - make
+    - automake
+    - autoconf
+    - libtool
+    - curl
+    - curl-devel

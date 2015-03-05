@@ -1,5 +1,15 @@
 ---
 
+# package or source
+nginx_install_method: package
+
+nginx_build_dir: /usr/local/src/
+nginx_version: 1.6.2
+nginx_url: "http://www.nginx.org/download/nginx-{{ nginx_version }}.tar.gz"
+
+# requires nginx_install_method: source
+nginx_modsec: false
+
 nginx_max_clients: 512
 
 nginx_http_params:
@@ -16,3 +26,6 @@ nginx_separete_logs_per_site: False
 nginx_upstreams: []
 
 nginx_sites: []
+
+nginx_dir: /usr/local/nginx
+nginx_daemon_args: -c /etc/nginx/nginx.conf

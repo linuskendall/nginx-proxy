@@ -1,0 +1,48 @@
+- name: Download nginx
+  get_url: url="{{ nginx_url }}" dest="{{ nginx_build_dir }}"
+
+- name: Unarchive nginx
+  unarchive: src="{{ nginx_build_dir }}/nginx-{{ nginx_version }}.tar.gz" dest="{{ nginx_build_dir }}" copy=no
+ 
+- name: Configure nginx
+  command: ./configure --add-module="{{ nginx_modsec_dir }}/nginx/modsecurity"
+  args:
+   chdir: "{{ nginx_build_dir }}/nginx-{{ nginx_version }}"
+  when: nginx_modsec
+
+- name: Configure nginx
+  command: ./configure 
+  args:
+   chdir: "{{ nginx_build_dir }}/nginx-{{ nginx_version }}"
+  when: not nginx_modsec
+
+- name: Make nginx
+  command: make
+  args:
+   chdir: "{{ nginx_build_dir }}/nginx-{{ nginx_version }}"
+  
+- name: Install nginx
+  command: make install
+  args:
+   chdir: "{{ nginx_build_dir }}/nginx-{{ nginx_version }}"
+
+- name: Install SysV init script
+  template: src=initd.nginx dest=/etc/init.d/nginx mode=0755 owner=root 
+  when: ansible_os_family == "Debian"
+
+- name: Link config directory
+  file: src=/usr/local/nginx/conf dest=/etc/nginx state=link
+
+- name: Create nginx user
+  user: name="{{ nginx_user }}" state=present
+
+- name: Create other directories
+  file: path="/var/log/nginx" owner="{{ nginx_user }}" state=directory 
+
+- name: Disable apache
+  service: name=apache2 state=stopped enabled=no
+  when: ansible_os_family == "Debian"
+
+- name: Disable apache
+  service: name=httpd state=stopped enabled=no
+  when: ansible_os_family == "RedHat"
