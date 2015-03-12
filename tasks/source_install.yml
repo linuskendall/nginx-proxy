@@ -30,8 +30,13 @@
   template: src=initd.nginx dest=/etc/init.d/nginx mode=0755 owner=root 
   when: ansible_os_family == "Debian"
 
+- name: Check if nginx conf directory was created
+  stat: path=/etc/nginx 
+  register: confdir
+
 - name: Link config directory
   file: src=/usr/local/nginx/conf dest=/etc/nginx state=link
+  when: not (confdir.stat.isdir is defined and confdir.stat.isdir)
 
 - name: Create nginx user
   user: name="{{ nginx_user }}" state=present
