@@ -42,6 +42,12 @@
   notify: 
    - reload nginx
 
+- name: Copy ssl rules
+  template: src=ssl.rules dest=/etc/nginx/ssl.rules
+
+- name: Generate dhparams
+  command: openssl dhparam -outform pem -out /etc/nginx/dhparam2048.pem 2048
+
 - name: Copy the nginx default site configuration file 
   template: src=default.j2 dest=/etc/nginx/sites-available/default
   tags: 
