@@ -47,6 +47,8 @@
 
 - name: Generate dhparams
   command: openssl dhparam -outform pem -out /etc/nginx/dhparam2048.pem 2048
+  args:
+    creates: /etc/nginx/dhparam2048.pem
 
 - name: Copy the nginx default site configuration file 
   template: src=default.j2 dest=/etc/nginx/sites-available/default
