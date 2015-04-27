@@ -37,7 +37,7 @@ ssl_session_cache   shared:SSL:10m;
 ssl_session_timeout 10m;
 
 # Buffer size of 1400 bytes fits in one MTU.
-ssl_buffer_size 1400;
+# ssl_buffer_size 1400;
 
 # SPDY header compression (0 for none, 9 for slow/heavy compression). Preferred is 6.
 #
