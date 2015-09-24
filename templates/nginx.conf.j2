@@ -19,8 +19,15 @@ http {
         error_log {{ nginx_log_dir}}/{{ nginx_error_log_name}};
 
 {% for k,v in nginx_http_params.iteritems() %}
-        {{ k }}  {{ v }}{% if not v|match('.*}$') %};{% endif %}
+{%    if not v is string and v is iterable %}
+      {% for h in v %}
+    {{ k }}  {{ h }}{% if not h|match('.*}$') %};{% endif %}
 
+        {% endfor %}
+{%  else %}
+    {{ k }}  {{ v }}{% if not v|match('.*}$') %};{% endif %}
+
+{% endif %}
 {% endfor %}
 
         gzip on;
