@@ -2,13 +2,16 @@
 user              {{ nginx_user }};
 
 worker_processes  {{ ansible_processor_count }};
+{% if nginx_worker_rlimit_nofile is defined %}
+worker_rlimit_nofile {{ nginx_worker_rlimit_nofile }};
+{% endif %}
 pid        /var/run/nginx.pid;
 
 
 events {
     worker_connections  {{ nginx_max_clients }};
-    multi_accept {{ nginx_multi_accept }};
-    {% if nginx_use_epoll %}
+    multi_accept {{ nginx_multi_accept|default('off') }};
+    {% if nginx_use_epoll is defined and nginx_use_epoll %}
     use epoll;
     {% endif %}
 }
@@ -19,8 +22,12 @@ http {
         include /etc/nginx/mime.types;
         default_type application/octet-stream;
 
+        {% if nginx_access_log %}
         access_log {{ nginx_log_dir}}/{{ nginx_access_log_name}};
+        {% endif %}
+        {% if nginx_error_log %}
         error_log {{ nginx_log_dir}}/{{ nginx_error_log_name}};
+        {% endif %}
 
 {% for k,v in nginx_http_params.iteritems() %}
 {%    if not v is string and v is iterable %}

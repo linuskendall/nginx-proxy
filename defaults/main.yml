@@ -12,6 +12,9 @@ nginx_modsec: false
 
 nginx_max_clients: 512
 
+nginx_access_log: true
+nginx_error_log: true
+
 nginx_http_params:
   sendfile: "on"
   tcp_nopush: "on"
