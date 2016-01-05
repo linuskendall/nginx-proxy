@@ -1,5 +1,5 @@
 #{{ ansible_managed }}
-user              {{ nginx_user }};
+user              {{ nginx_user }};
 
 worker_processes  {{ ansible_processor_count }};
 pid        /var/run/nginx.pid;
@@ -8,6 +8,9 @@ pid        /var/run/nginx.pid;
 events {
     worker_connections  {{ nginx_max_clients }};
     multi_accept {{ nginx_multi_accept }};
+    {% if nginx_use_epoll %}
+    use epoll;
+    {% endif %}
 }
 
 
