@@ -2,7 +2,12 @@ upstream {{item.upstream.name}} {
   {% if item.upstream.ip_hash is defined and item.upstream.ip_hash %}
     ip_hash;
   {% endif %}
-  {% for host in groups[item.upstream.server_group] %}
-    server {{hostvars[host]["ansible_"+item.upstream.server_if|default('eth0')]["ipv4"]["address"]}}:{{item.upstream.port}};    
-  {% endfor %}
+  {% if item.upstream.server_group in groups %}
+      {% for host in groups[item.upstream.server_group] %}
+        server {{hostvars[host]["ansible_"+item.upstream.server_if|default('eth0')]["ipv4"]["address"]}}:{{item.upstream.port}};    
+      {% endfor %}
+  {% elseif item.upstream.server_group in hostvars %}
+    server {{hostvars[item.upstream.server_group]["ansible_"+item.upstream.server_if|default('eth0')]["ipv4"]["address"]}}:{{item.upstream.port}};    
+  {% endif %}
+
 }

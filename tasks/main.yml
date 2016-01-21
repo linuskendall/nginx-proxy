@@ -4,20 +4,24 @@
 - name: Include OS specific variables
   include_vars: "{{ item }}"
   with_first_found: 
-    - "{{ansible_distribution | lower }}-{{ansible_distribution_version}}.yml"
-    - "{{ansible_distribution | lower }}.yml"
+    - "{{ansible_distribution | lower }}-{{ansible_distribution_version}}.yml"
+    - "{{ansible_distribution | lower }}.yml"
     - "{{ansible_os_family | lower}}.yml"
     - "default.yml"
+  tags:
+    - config
 
 - name: Install the selinux python module
   yum: name=libselinux-python state=present
   when: ansible_os_family == "RedHat"
+  tags:
+    - config
 
 - include: package_install.yml
-  when: '{{ nginx_install_method == "package" }}'
+  when: '{{ nginx_install_method == "package" }}'
 
 - include: source_install.yml
-  when: '{{ nginx_install_method == "source" }}'
+  when: '{{ nginx_install_method == "source" }}'
 
 - name: Create the directories for site specific configurations
   file: path=/etc/nginx/{{ item }} state=directory owner=root group=root mode=0755
