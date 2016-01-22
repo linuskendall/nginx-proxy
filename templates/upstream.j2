@@ -6,7 +6,7 @@ upstream {{item.upstream.name}} {
       {% for host in groups[item.upstream.server_group] %}
         server {{hostvars[host]["ansible_"+item.upstream.server_if|default('eth0')]["ipv4"]["address"]}}:{{item.upstream.port}};    
       {% endfor %}
-  {% elseif item.upstream.server_group in hostvars %}
+  {% elif item.upstream.server_group in hostvars %}
     server {{hostvars[item.upstream.server_group]["ansible_"+item.upstream.server_if|default('eth0')]["ipv4"]["address"]}}:{{item.upstream.port}};    
   {% endif %}
 
