@@ -60,7 +60,7 @@ export PATH=$PATH:{{ nginx_dir }}/sbin/
 readonly NAME=nginx
 
 # Arguments that should be passed to the executable.
-readonly DAEMON_ARGS="{{ nginx_daemon_args }}"
+readonly DAEMON_ARGS="{{ nginx_daemon_args }}"
 
 # Absolute path to the PID file.
 readonly PIDFILE=/var/run/nginx.pid
