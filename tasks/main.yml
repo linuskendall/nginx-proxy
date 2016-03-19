@@ -11,11 +11,17 @@
   tags:
     - config
 
+- name: run debug 1
+  debug: msg="hello 1"
+
 - name: Install the selinux python module
   yum: name=libselinux-python state=present
   when: ansible_os_family == "RedHat"
   tags:
     - config
+
+- name: run debug 2
+  debug: msg="hello 2"
 
 - include: package_install.yml
   when: '{{ nginx_install_method == "package" }}'
@@ -79,6 +85,7 @@
 - name: Create the configurations for sites
   template: src=site.j2 dest=/etc/nginx/sites-available/{{ item['server']['file_name'] }}
   with_items: nginx_sites
+  register: nginx_site_configs
   tags: 
    - config
   notify: 
@@ -94,3 +101,7 @@
 
 - name: start the nginx service
   service: name=nginx state=started enabled=yes
+
+- name: Reload nginx immediately
+  service: name=nginx state=reloaded
+  when: nginx_site_configs|changed and nginx_immediate_site_reload
